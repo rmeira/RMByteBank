@@ -137,8 +137,9 @@ class TransferListState extends State<TransferList> {
             }),
           );
           future.then((handleTransferReceived) {
-            debugPrint('$handleTransferReceived');
-            widget._transfer.add(handleTransferReceived);
+            setState(() {
+              widget._transfer.add(handleTransferReceived);
+            });
           });
         },
         child: Icon(Icons.add),
