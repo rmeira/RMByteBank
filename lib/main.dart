@@ -7,7 +7,7 @@ class FlutterInitApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: TransferForm(),
+        body: TransferList(),
       ),
       debugShowCheckedModeBanner: false,
     );
@@ -21,6 +21,10 @@ class TransferForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Adicionar nova transferência'),
+        backgroundColor: Colors.orange[600],
+      ),
       body: Container(
         child: Column(
           children: <Widget>[
@@ -40,24 +44,22 @@ class TransferForm extends StatelessWidget {
               color: Colors.orange[600],
               textColor: Colors.white,
               child: Text("Adicionar transferência"),
-              onPressed: () {
-                final double value = double.tryParse(_value.text);
-                final int account = int.tryParse(_account.text);
-
-                if (value != null && account != null) {
-                  Transfer(value, account);
-                }
-              },
+              onPressed: () => _handleCreateTranfer(context, _value, _account),
             ),
           ],
         ),
       ),
-      appBar: AppBar(
-        actions: <Widget>[BackButton()],
-        title: const Text('Adicionar nova transferência'),
-        backgroundColor: Colors.orange[600],
-      ),
     );
+  }
+}
+
+void _handleCreateTranfer(BuildContext context, _value, _account) {
+  final double value = double.tryParse(_value.text);
+  final int account = int.tryParse(_account.text);
+
+  if (value != null && account != null) {
+    final tranferCreate = Transfer(value, account);
+    Navigator.pop(context, tranferCreate);
   }
 }
 
@@ -88,7 +90,9 @@ class TransferFormField extends StatelessWidget {
         decoration: InputDecoration(
           suffixIcon: Padding(
             padding: const EdgeInsetsDirectional.only(end: 4.0),
-            child: Icon(icon), // myIcon is a 48px-wide widget.
+            child: icon != null
+                ? Icon(icon)
+                : null, // myIcon is a 48px-wide widget.
           ),
           labelText: label,
           hintText: hint,
@@ -101,27 +105,42 @@ class TransferFormField extends StatelessWidget {
   }
 }
 
-class TransferList extends StatelessWidget {
+class TransferList extends StatefulWidget {
+  final List<Transfer> _transfer = List();
+
+  @override
+  State<StatefulWidget> createState() => TransferListState();
+}
+
+class TransferListState extends State<TransferList> {
   @override
   Widget build(BuildContext context) {
+    debugPrint('$widget._transfer');
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            TransferItem(Transfer(100.0, 1000)),
-            TransferItem(Transfer(100.0, 2000)),
-            TransferItem(Transfer(100.0, 3000)),
-            TransferItem(Transfer(100.0, 4000)),
-            TransferItem(Transfer(100.0, 5000)),
-            TransferItem(Transfer(100.0, 6000)),
-          ],
-        ),
+      body: ListView.builder(
+        itemCount: widget._transfer.length,
+        itemBuilder: (context, index) {
+          final transfer = widget._transfer[index];
+          return TransferItem(transfer);
+        },
       ),
       appBar: AppBar(
         title: const Text('Transferências'),
         backgroundColor: Colors.orange[600],
       ),
       floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final Future<Transfer> future = Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return TransferForm();
+            }),
+          );
+          future.then((handleTransferReceived) {
+            debugPrint('$handleTransferReceived');
+            widget._transfer.add(handleTransferReceived);
+          });
+        },
         child: Icon(Icons.add),
         backgroundColor: Colors.orange[600],
       ),
@@ -154,4 +173,9 @@ class Transfer {
   final int account;
 
   Transfer(this.value, this.account);
+
+  @override
+  String toString() {
+    return 'Transfer{value: $value, account: $account}';
+  }
 }
