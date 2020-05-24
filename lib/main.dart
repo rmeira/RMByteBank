@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(FlutterInitApp());
+void main() => runApp(RMByteBank());
 
-class FlutterInitApp extends StatelessWidget {
+class RMByteBank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
