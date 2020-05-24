@@ -24,48 +24,17 @@ class TransferForm extends StatelessWidget {
       body: Container(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: TextField(
-                controller: _account,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-                decoration: InputDecoration(
-                  suffixIcon: Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 4.0),
-                    child:
-                        Icon(Icons.tonality), // myIcon is a 48px-wide widget.
-                  ),
-                  labelText: "Número da conta",
-                  hintText: '0000',
-                  border: OutlineInputBorder(),
-                  fillColor: Colors.orange[600],
-                ),
-                autofocus: true,
-                keyboardType: TextInputType.number,
-              ),
+            TransferFormField(
+              controller: _account,
+              label: 'Número da conta',
+              hint: '1000',
+              autofocus: true,
             ),
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: TextField(
-                controller: _value,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-                decoration: InputDecoration(
-                  suffixIcon: Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 4.0),
-                    child: Icon(
-                        Icons.attach_money), // myIcon is a 48px-wide widget.
-                  ),
-                  labelText: "Valor gasto",
-                  hintText: '120.00',
-                  border: OutlineInputBorder(),
-                ),
-                autofocus: true,
-                keyboardType: TextInputType.number,
-              ),
+            TransferFormField(
+              controller: _value,
+              label: 'Valor gasto',
+              hint: '120.00',
+              icon: Icons.attach_money,
             ),
             RaisedButton(
               color: Colors.orange[600],
@@ -87,6 +56,46 @@ class TransferForm extends StatelessWidget {
         actions: <Widget>[BackButton()],
         title: const Text('Adicionar nova transferência'),
         backgroundColor: Colors.orange[600],
+      ),
+    );
+  }
+}
+
+class TransferFormField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final String hint;
+  final bool autofocus;
+  final IconData icon;
+
+  TransferFormField({
+    this.controller,
+    this.label,
+    this.hint,
+    this.autofocus = false,
+    this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: TextField(
+        controller: controller,
+        style: TextStyle(
+          fontSize: 20,
+        ),
+        decoration: InputDecoration(
+          suffixIcon: Padding(
+            padding: const EdgeInsetsDirectional.only(end: 4.0),
+            child: Icon(icon), // myIcon is a 48px-wide widget.
+          ),
+          labelText: label,
+          hintText: hint,
+          border: OutlineInputBorder(),
+        ),
+        autofocus: autofocus,
+        keyboardType: TextInputType.number,
       ),
     );
   }
