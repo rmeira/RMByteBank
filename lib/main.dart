@@ -6,15 +6,26 @@ class RMByteBank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: TransferList(),
+      theme: ThemeData(
+        primaryColor: Colors.cyan[400],
+        accentColor: Colors.cyan[200],
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.cyan[200],
+          textTheme: ButtonTextTheme.primary,
+        ),
       ),
+      home: TransferList(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class TransferForm extends StatelessWidget {
+class TransferForm extends StatefulWidget {
+  @override
+  _TransferFormState createState() => _TransferFormState();
+}
+
+class _TransferFormState extends State<TransferForm> {
   final TextEditingController _account = TextEditingController();
   final TextEditingController _value = TextEditingController();
 
@@ -23,9 +34,8 @@ class TransferForm extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Adicionar nova transferência'),
-        backgroundColor: Colors.orange[600],
       ),
-      body: Container(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             TransferFormField(
@@ -41,8 +51,6 @@ class TransferForm extends StatelessWidget {
               icon: Icons.attach_money,
             ),
             RaisedButton(
-              color: Colors.orange[600],
-              textColor: Colors.white,
               child: Text("Adicionar transferência"),
               onPressed: () => _handleCreateTranfer(context, _value, _account),
             ),
@@ -51,15 +59,15 @@ class TransferForm extends StatelessWidget {
       ),
     );
   }
-}
 
-void _handleCreateTranfer(BuildContext context, _value, _account) {
-  final double value = double.tryParse(_value.text);
-  final int account = int.tryParse(_account.text);
+  void _handleCreateTranfer(BuildContext context, _value, _account) {
+    final double value = double.tryParse(_value.text);
+    final int account = int.tryParse(_account.text);
 
-  if (value != null && account != null) {
-    final tranferCreate = Transfer(value, account);
-    Navigator.pop(context, tranferCreate);
+    if (value != null && account != null) {
+      final tranferCreate = Transfer(value, account);
+      Navigator.pop(context, tranferCreate);
+    }
   }
 }
 
@@ -126,7 +134,6 @@ class TransferListState extends State<TransferList> {
       ),
       appBar: AppBar(
         title: const Text('Transferências'),
-        backgroundColor: Colors.orange[600],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -136,14 +143,14 @@ class TransferListState extends State<TransferList> {
               return TransferForm();
             }),
           );
-          future.then((handleTransferReceived) {
-            setState(() {
-              widget._transfer.add(handleTransferReceived);
-            });
+          future.then((transferReceived) {
+            if (transferReceived != null)
+              setState(() {
+                widget._transfer.add(transferReceived);
+              });
           });
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.orange[600],
       ),
     );
   }
