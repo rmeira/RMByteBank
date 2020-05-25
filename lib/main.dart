@@ -7,10 +7,10 @@ class RMByteBank extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primaryColor: Colors.cyan[400],
-        accentColor: Colors.cyan[200],
+        primaryColor: Colors.cyan[900],
+        accentColor: Colors.cyan[600],
         buttonTheme: ButtonThemeData(
-          buttonColor: Colors.cyan[200],
+          buttonColor: Colors.cyan[600],
           textTheme: ButtonTextTheme.primary,
         ),
       ),
