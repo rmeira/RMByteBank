@@ -2,6 +2,13 @@ import 'package:RMByteBank/components/formTextField.dart';
 import 'package:RMByteBank/models/transfer.dart';
 import 'package:flutter/material.dart';
 
+const _appBarTitle = 'Adicionar nova transferência';
+const _labelAccount = 'Número da conta';
+const _hintAccount = '1000';
+const _labelValue = 'Valor gasto';
+const _hintValue = '0.00';
+const _confirmButton = 'Adicionar transferência';
+
 class TransferForm extends StatefulWidget {
   @override
   _TransferFormState createState() => _TransferFormState();
@@ -15,25 +22,25 @@ class _TransferFormState extends State<TransferForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adicionar nova transferência'),
+        title: const Text(_appBarTitle),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             FormTextField(
               controller: _account,
-              label: 'Número da conta',
-              hint: '1000',
+              label: _labelAccount,
+              hint: _hintAccount,
               autofocus: true,
             ),
             FormTextField(
               controller: _value,
-              label: 'Valor gasto',
-              hint: '120.00',
+              label: _labelValue,
+              hint: _hintValue,
               icon: Icons.attach_money,
             ),
             RaisedButton(
-              child: Text("Adicionar transferência"),
+              child: Text(_confirmButton),
               onPressed: () => _handleCreateTranfer(context, _value, _account),
             ),
           ],

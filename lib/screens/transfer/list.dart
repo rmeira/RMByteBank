@@ -2,6 +2,8 @@ import 'package:RMByteBank/models/transfer.dart';
 import 'package:RMByteBank/screens/transfer/form.dart';
 import 'package:flutter/material.dart';
 
+const _appBarTitle = 'Transferências';
+
 class TransferList extends StatefulWidget {
   final List<Transfer> _transfer = List();
 
@@ -12,7 +14,6 @@ class TransferList extends StatefulWidget {
 class TransferListState extends State<TransferList> {
   @override
   Widget build(BuildContext context) {
-    debugPrint('$widget._transfer');
     return Scaffold(
       body: ListView.builder(
         itemCount: widget._transfer.length,
@@ -22,26 +23,25 @@ class TransferListState extends State<TransferList> {
         },
       ),
       appBar: AppBar(
-        title: const Text('Transferências'),
+        title: const Text(_appBarTitle),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final Future<Transfer> future = Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) {
-              return TransferForm();
-            }),
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return TransferForm();
+          })).then(
+            (transferReceived) => _transferReceived(transferReceived),
           );
-          future.then((transferReceived) {
-            if (transferReceived != null)
-              setState(() {
-                widget._transfer.add(transferReceived);
-              });
-          });
         },
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  void _transferReceived(Transfer transferReceived) {
+    if (transferReceived != null) {
+      setState(() => widget._transfer.add(transferReceived));
+    }
   }
 }
 
@@ -58,8 +58,8 @@ class TransferItem extends StatelessWidget {
           Icons.monetization_on,
           size: 32.00,
         ),
-        title: Text('R ' + _transfer.value.toString()),
-        subtitle: Text('Conta: ' + _transfer.account.toString()),
+        title: Text(_transfer.value.toString()),
+        subtitle: Text(_transfer.account.toString()),
       ),
     );
   }
