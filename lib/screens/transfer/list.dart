@@ -24,6 +24,7 @@ class TransferListState extends State<TransferList> {
       ),
       appBar: AppBar(
         title: const Text(_appBarTitle),
+        centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
